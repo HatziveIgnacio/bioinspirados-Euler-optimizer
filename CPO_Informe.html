@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chinese Pangolin Optimizer - Informe Académico</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Calibri', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        
+        .document {
+            background: white;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .portada {
+            text-align: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 40px;
+            margin-bottom: 40px;
+            page-break-after: always;
+        }
+        
+        .portada h1 {
+            font-size: 2.5em;
+            margin: 30px 0;
+            color: #2c3e50;
+        }
+        
+        .portada h2 {
+            font-size: 1.8em;
+            color: #34495e;
+            margin: 20px 0;
+        }
+        
+        .portada p {
+            font-size: 1.1em;
+            margin: 15px 0;
+            color: #555;
+        }
+        
+        .autores {
+            margin-top: 40px;
+            font-weight: 500;
+        }
+        
+        .fecha {
+            margin-top: 60px;
+            font-size: 1.1em;
+            color: #666;
+        }
+        
+        h2 {
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+        }
+        
+        h3 {
+            font-size: 1.3em;
+            color: #34495e;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        p {
+            text-align: justify;
+            margin-bottom: 12px;
+            color: #444;
+        }
+        
+        .ecuacion {
+            background: #ecf0f1;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #3498db;
+            font-size: 1.1em;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        
+        .pseudocodigo {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        .componente {
+            background: #f9f9f9;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #2ecc71;
+        }
+        
+        .componente strong {
+            color: #27ae60;
+        }
+        
+        .indice {
+            background: #ecf0f1;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .indice h3 {
+            margin-top: 0;
+        }
+        
+        .indice ol {
+            margin-left: 20px;
+        }
+        
+        .indice li {
+            margin: 8px 0;
+        }
+        
+        .referencia {
+            background: #fef5e7;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #f39c12;
+            font-size: 0.95em;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        table th {
+            background: #34495e;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        table tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .nota {
+            background: #d5f4e6;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border-left: 4px solid #27ae60;
+        }
+        
+        .bioinspirado {
+            background: #fff3cd;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .page-break {
+            page-break-after: always;
+            margin: 40px 0;
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            .document {
+                max-width: 100%;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="document">
+        <!-- PORTADA -->
+        <div class="portada">
+            <h1>Chinese Pangolin Optimizer</h1>
+            <h2>Un nuevo algoritmo metaheurístico bio-inspirado para problemas complejos de optimización y diseño de ingeniería</h2>
+            <p style="font-style: italic; margin-top: 30px;">
+                (A novel bio-inspired metaheuristic algorithm for complex optimization and engineering design problems)
+            </p>
+            
+            <div class="autores">
+                <p><strong>Fecha: 09 de abril de 2026</strong></p>
+                <p>Javier Morales Diaz - 21.437.727-6 -- Ingeniería Civil Informática</p>
+                <p>Ignacio Layana Silva - 21.307.959-K -- Ingeniería Civil Informática</p>
+                <p>Matias Ruiz -- Ingeniería Civil Informática</p>
+            </div>
+        </div>
+        
+        <div class="page-break"></div>
+        
+        <!-- ÍNDICE -->
+        <h2>Índice</h2>
+        <div class="indice">
+            <ol>
+                <li><strong>Índice</strong> ...................................................... 2</li>
+                <li><strong>Introducción</strong> ................................................ 3</li>
+                <li><strong>Metaheurística Bio-inspirada</strong> ................................ 3</li>
+                <ul>
+                    <li>3.1 Comportamientos del Pangolín Chino ............................ 3</li>
+                    <li>3.2 Ecuaciones de Movimiento ..................................... 4</li>
+                    <li>3.3 Pseudocódigo y Diagrama de Flujo ............................ 5</li>
+                </ul>
+                <li><strong>Algoritmo CPO Detallado</strong> ..................................... 5</li>
+                <li><strong>Referencias</strong> ................................................. 7</li>
+            </ol>
+        </div>
+        
+        <div class="page-break"></div>
+        
+        <!-- INTRODUCCIÓN -->
+        <h2>1. Introducción</h2>
+        <p>
+            La resolución de problemas complejos de optimización no lineal es un desafío crítico en la actualidad. 
+            Los métodos tradicionales, basados en técnicas determinísticas y gradientes, presentan limitaciones significativas 
+            cuando se enfrentan a espacios de búsqueda altamente multimodales, discontinuos y de alta dimensionalidad. 
+            En este contexto, la naturaleza ha perfeccionado a lo largo de millones de años estrategias de localización y 
+            captura extremadamente eficientes.
+        </p>
+        <p>
+            El pangolín chino (<em>Manis pentadactyla</em>) es un depredador excepcional que ha evolucionado mecanismos 
+            de búsqueda visual y olfativa de una precisión notable. Utilizando un agudo sentido del olfato combinado con 
+            instintos de caza refinados, el pangolín es capaz de localizar y capturar presas con una eficiencia notable, 
+            incluso en entornos complejos y con múltiples objetivos potenciales.
+        </p>
+        <p>
+            El <strong>Chinese Pangolin Optimizer (CPO)</strong> es una metaheurística bio-inspirada que traduce estos 
+            comportamientos de caza natural en un algoritmo de optimización robusto y eficiente. A diferencia de otros 
+            algoritmos poblacionales tradicionales, el CPO incorpora mecanismos de actualización de distancia olfativa 
+            y transiciones dinámicas entre fases de exploración (rastreo) y explotación (captura), garantizando un equilibrio 
+            óptimo entre exploración global y convergencia local.
+        </p>
+        
+        <div class="page-break"></div>
+        
+        <!-- METAHEURÍSTICA -->
+        <h2>2. Metaheurística Bio-inspirada</h2>
+        
+        <h3>2.1 Comportamientos del Pangolín Chino como Metáfora Computacional</h3>
+        
+        <p>
+            El CPO conceptualiza el problema de optimización como una tarea de caza en la que múltiples "pangolines" 
+            (agentes de optimización) trabajan colaborativamente para localizar la fuente de "aroma" óptima 
+            (la solución global). A diferencia de otros algoritmos que consideran el espacio como un medio de flujo matricial, 
+            el CPO trata el espacio de búsqueda como un <!-- CONTINÚA EN SIGUIENTE SECCIÓN -->campo de concentración de olor 
+            tridimensional donde la intensidad creciente indica proximidad a objetivos mejores.
+        </p>
+        
+        <div class="bioinspirado">
+            <strong>Metáfora Central:</strong> Los agentes de optimización perciben gradientes de intensidad olfativa 
+            que representan la dirección hacia mejores soluciones. Esta percepción no es lineal ni uniforme; responde 
+            de manera adaptativa a la calidad relativa de las soluciones encontradas.
+        </div>
+        
+        <p>
+            El algoritmo implementa dos fases comportamentales principales:
+        </p>
+        
+        <p>
+            <strong>Fase 1: Rastreo Olfativo (Luring Behavior)</strong><br>
+            En esta fase, el pangolín utiliza su agudo olfato para detectar la dirección general de la presa. Esta fase se 
+            subdivide en dos estadios:
+        </p>
+        <ul style="margin-left: 20px; margin-bottom: 15px;">
+            <li><strong>Atracción (Attracting):</strong> El pangolín detecta cambios en la concentración de olor y se orienta hacia aumentos de intensidad.</li>
+            <li><strong>Aproximación (Moving to feed):</strong> Una vez localizado el objetivo, el pangolín ejecuta movimientos de aproximación progresiva.</li>
+        </ul>
+        
+        <p>
+            <strong>Fase 2: Comportamiento de Depredación (Predation Behavior)</strong><br>
+            Esta fase caracteriza la explotación intensiva de regiones promisoras:
+        </p>
+        <ul style="margin-left: 20px; margin-bottom: 15px;">
+            <li><strong>Búsqueda Localizada (Searching and locating):</strong> Exploración refinada en las proximidades de candidatos de alta calidad.</li>
+            <li><strong>Aproximación Rápida (Rapid approaching):</strong> Aceleración de la convergencia mediante pasos de mayor magnitud.</li>
+            <li><strong>Captura Final (Digging to feed):</strong> Convergencia de precisión hacia el óptimo local identificado.</li>
+        </ul>
+        
+        <p>
+            La transición entre fases no es determinística sino probabilística, controlada por un parámetro adaptativo 
+            que evoluciona conforme avanza la búsqueda. Esto permite que el algoritmo mantenga una exploración significativa 
+            en iteraciones tempranas mientras favorece la explotación en etapas tardías.
+        </p>
+        
+        <h3>2.2 Ecuaciones de Movimiento</h3>
+        
+        <p>
+            La dinámica del movimiento de cada agente (pangolín) se rige por una ecuación de actualización de posición 
+            que integra el comportamiento de instinto de caza y percepción olfativa. La ecuación fundamental es:
+        </p>
+        
+        <div class="ecuacion">
+            x<sub>t+1</sub> = x<sub>t</sub> + Δt · v<sub>instinto</sub>(x<sub>t</sub>, x<sub>best</sub>, t)
+        </div>
+        
+        <p>
+            Donde cada componente tiene interpretación biológica:
+        </p>
+        
+        <div class="componente">
+            <strong>x<sub>t</sub>:</strong> Representa la posición actual del pangolín en el espacio de búsqueda 
+            (estado actual de las variables de decisión en la iteración t).
+        </div>
+        
+        <div class="componente">
+            <strong>x<sub>t+1</sub>:</strong> Es la nueva posición del pangolín tras ejecutar su movimiento. 
+            Esta es la actualización de variables de decisión para la siguiente iteración.
+        </div>
+        
+        <div class="componente">
+            <strong>Δt:</strong> Factor de intensidad de olor (step size adaptativo). Funciona como el amplificador 
+            del instinto: en iteraciones tempranas Δt es grande (exploración), decreciendo linealmente hacia cero 
+            (convergencia de precisión).
+        </div>
+        
+        <div class="componente">
+            <strong>v<sub>instinto</sub>(x<sub>t</sub>, x<sub>best</sub>, t):</strong> Vector de instinto de caza. 
+            Representa la dirección y magnitud del movimiento motivado por la percepción olfativa del pangolín. 
+            Matemáticamente:
+        </div>
+        
+        <div class="ecuacion">
+            v<sub>instinto</sub> = (x<sub>best</sub> - x<sub>t</sub>) / (||x<sub>best</sub> - x<sub>t</sub>|| + ε)
+        </div>
+        
+        <p>
+            Esta formulación normaliza el vector de dirección hacia la mejor solución encontrada, garantizando que 
+            independientemente de la escala del problema, el movimiento sea proporcionado. El término ε previene 
+            división por cero cuando el pangolín está muy próximo a la solución actual.
+        </p>
+        
+        <p>
+            El parámetro Δt evoluciona según:
+        </p>
+        
+        <div class="ecuacion">
+            Δt = Δt<sub>inicial</sub> × (1 - t / N<sub>iteraciones</sub>)
+        </div>
+        
+        <p>
+            Esta estrategia de decremento lineal del "factor de intensidad de olor" favorece una transición natural 
+            desde la exploración global (Δt grande) hacia la explotación local (Δt pequeño), replicando cómo un 
+            pangolín ajusta su velocidad y cautela conforme se aproxima a la presa.
+        </p>
+        
+        <h3>2.3 Lógica de Convergencia</h3>
+        
+        <p>
+            El algoritmo converge cuando:
+        </p>
+        <ul style="margin-left: 20px; margin-bottom: 15px;">
+            <li>Δt → 0 (el factor de instinto se aproxima a cero, cesando el movimiento), O</li>
+            <li>Se alcanza el número máximo de iteraciones N<sub>iteraciones</sub>, O</li>
+            <li>El valor de la función objetivo mejora menos que un umbral de tolerancia predefinido.</li>
+        </ul>
+        
+        <div class="nota">
+            <strong>Principio de Inteligencia de Enjambre:</strong> Aunque el CPO modela a agentes individuales movidos por 
+            instintos locales de caza, el comportamiento colectivo emerge de la comunicación implícita mediante la "mejor 
+            solución global" compartida (x<sub>best</sub>). Esto refleja cómo organizaciones de depredadores naturales 
+            coordinan su búsqueda.
+        </div>
+        
+        <div class="page-break"></div>
+        
+        <!-- PSEUDOCÓDIGO -->
+        <h2>3. Algoritmo CPO Detallado</h2>
+        
+        <h3>3.1 Pseudocódigo: ChinesePangolinOptimizer</h3>
+        
+        <div class="pseudocodigo">
+================================================================================
+ALGORITMO ChinesePangolinOptimizer(f, bounds, N_agentes, N_iteraciones, Δt_inicial)
+================================================================================
+
+    ENTRADA:
+        f: Función objetivo a optimizar
+        bounds: Límites inferiores y superiores para variables de decisión
+        N_agentes: Número de pangolines (agentes de optimización)
+        N_iteraciones: Número máximo de iteraciones
+        Δt_inicial: Factor de intensidad de olor inicial
+
+    SALIDA:
+        x_best: Mejor solución encontrada
+        f_best: Valor de función objetivo de la mejor solución
+
+─────────────────────────────────────────────────────────────────────────────
+FASE 1: INICIALIZACIÓN (Dispersión de pangolines)
+─────────────────────────────────────────────────────────────────────────────
+
+PARA i = 1 HASTA N_agentes HACER
+    x[i] ← GenerarAleatorio(bounds)        // Posición inicial aleatoria
+    f_evaluada[i] ← Evaluar(f, x[i])      // Evaluar función objetivo
+FIN PARA
+
+x_best ← x[argmin(f_evaluada)]            // Mejor posición identificada
+f_best ← min(f_evaluada)                  // Mejor valor de función
+
+─────────────────────────────────────────────────────────────────────────────
+FASE 2: RASTREO OLFATIVO (Luring Behavior)
+─────────────────────────────────────────────────────────────────────────────
+
+PARA t = 1 HASTA N_iteraciones HACER
+
+    // Actualizar factor de intensidad de olor (decremento adaptativo)
+    Δt ← Δt_inicial × (1 - t / N_iteraciones)
+
+    // Estadio 2a: Atracción Olfativa
+    PARA i = 1 HASTA N_agentes HACER
+
+        // Calcular vector de instinto (dirección olfativa)
+        vector_olor[i] ← (x_best - x[i]) / (||x_best - x[i]|| + ε)
+
+        // Aplicar ecuación de movimiento de rastreo
+        x[i] ← x[i] + Δt × vector_olor[i]
+
+        // Forzar permanencia dentro de los límites del espacio
+        x[i] ← Clip(x[i], bounds)
+
+        // Evaluar nueva posición
+        f_nueva[i] ← Evaluar(f, x[i])
+
+        // Actualizar mejor solución global si se encontró mejora
+        SI f_nueva[i] < f_best ENTONCES
+            x_best ← x[i]
+            f_best ← f_nueva[i]
+        FIN SI
+
+    FIN PARA
+
+    // Criterio de parada adaptativa
+    SI f_best < umbral_convergencia ENTONCES
+        ROMPER
+    FIN SI
+
+FIN PARA
+
+─────────────────────────────────────────────────────────────────────────────
+RETORNAR (x_best, f_best)
+─────────────────────────────────────────────────────────────────────────────
+        </div>
+        
+        <h3>3.2 Componentes Clave del Algoritmo CPO</h3>
+        
+        <div class="componente">
+            <strong>1. x[i]:</strong> Vector de variables de decisión del agente i. Representa la posición espacial 
+            del i-ésimo pangolín en el espacio de búsqueda multidimensional.
+        </div>
+        
+        <div class="componente">
+            <strong>2. f_evaluada[i]:</strong> Valor de la función objetivo evaluada en la posición x[i]. 
+            Representa "qué tan fuerte es el olor de la presa" desde la perspectiva del pangolín.
+        </div>
+        
+        <div class="componente">
+            <strong>3. x_best:</strong> La mejor posición encontrada hasta el momento en toda la población. 
+            Representa la "fuente de mayor intensidad olfativa" descubierta colectivamente.
+        </div>
+        
+        <div class="componente">
+            <strong>4. Ecuación de Movimiento CPO:</strong><br>
+            x[i] ← x[i] + Δt × (x<sub>best</sub> - x[i]) / (||x<sub>best</sub> - x[i]|| + ε)<br>
+            <br>
+            Componentes:<br>
+            • Δt: Factor de instinto (decae de exploración a explotación)<br>
+            • (x<sub>best</sub> - x[i]): Vector de diferencia (atracción olfativa)<br>
+            • Normalización: Asegura independencia de escala del problema
+        </div>
+        
+        <div class="componente">
+            <strong>5. Adaptabilidad Temporal:</strong> El parámetro Δt disminuye progresivamente durante la ejecución. 
+            En etapas tempranas (t pequeño), Δt es cercano a Δt_inicial, permitiendo grandes movimientos. 
+            En etapas tardías (t cercano a N_iteraciones), Δt tiende a cero, refinando la solución mediante 
+            movimientos pequeños.
+        </div>
+        
+        <div class="componente">
+            <strong>6. Integración de Inteligencia de Enjambre:</strong> Todos los agentes son atraídos hacia x_best, 
+            el óptimo global compartido. Esto simula cómo múltiples depredadores en la naturaleza comunican 
+            implícitamente la ubicación de presas de alta calidad.
+        </div>
+        
+        <h3>3.3 Características de Convergencia</h3>
+        
+        <table>
+            <tr>
+                <th>Característica</th>
+                <th>Descripción</th>
+            </tr>
+            <tr>
+                <td>Exploración Global</td>
+                <td>Garantizada en iteraciones iniciales por Δt grande y población dispersa</td>
+            </tr>
+            <tr>
+                <td>Explotación Local</td>
+                <td>Reforzada en iteraciones finales por Δt pequeño, movimientos precisos</td>
+            </tr>
+            <tr>
+                <td>Elitismo</td>
+                <td>La mejor solución jamás encontrada (x_best) guía toda la dinámica de población</td>
+            </tr>
+            <tr>
+                <td>Diversidad</td>
+                <td>Múltiples agentes mantienen posiciones diversas, reduciendo atrapamiento en óptimos locales</td>
+            </tr>
+            <tr>
+                <td>Robustez</td>
+                <td>Insensible a inicializaciones particulares; converge desde múltiples puntos</td>
+            </tr>
+        </table>
+        
+        <div class="page-break"></div>
+        
+        <!-- APLICACIONES Y VALIDACIÓN -->
+        <h2>4. Aplicabilidad y Validación Experimental</h2>
+        
+        <p>
+            El algoritmo CPO ha sido validado sobre:
+        </p>
+        <ul style="margin-left: 20px; margin-bottom: 15px;">
+            <li><strong>74 funciones benchmark estándar:</strong> Incluyendo funciones unimodales, multimodales y de dimensión fija.</li>
+            <li><strong>Conjuntos de prueba CEC2017, CEC2019 y CEC2022:</strong> Espacios altamente complejos y multimodales de la literatura internacional.</li>
+            <li><strong>Tres problemas estándar de diseño de ingeniería reales:</strong> Validación en escenarios de optimización aplicada.</li>
+            <li><strong>Doce tareas de selección de características (feature selection):</strong> Demostrando escalabilidad a espacios binarios y de alta dimensión.</li>
+        </ul>
+        
+        <p>
+            Los resultados experimentales demuestran que CPO supera significativamente a algoritmos baseline de 
+            metaheurísticas contemporáneas en términos de precisión, velocidad de convergencia y robustez ante 
+            óptimos locales.
+        </p>
+        
+        <div class="page-break"></div>
+        
+        <!-- REFERENCIAS -->
+        <h2>5. Referencias</h2>
+        
+        <div class="referencia">
+            <strong>[1]</strong> Guo, Z. Q., Liu, G. W., & Jiang, F. (2025). Chinese pangolin optimizer: A novel metaheuristic 
+            algorithm for 3D UAV path planning and engineering design problems. <em>Journal of Supercomputing</em>.
+        </div>
+        
+        <div class="referencia">
+            <strong>[2]</strong> Deng, Y. Z., Jiang, Y., et al. (2025). Euler optimizer: A novel metaheuristic algorithm for 
+            3D UAV path planning and engineering design problems. <em>Measurement Science and Technology</em>, 36(11).
+        </div>
+        
+        <div class="referencia">
+            <strong>[3]</strong> Kennedy, J., & Eberhart, R. (1995). Particle swarm optimization. 
+            <em>Proceedings of the 1995 IEEE International Conference on Neural Networks</em>, 4, 1942-1948.
+        </div>
+        
+        <div class="referencia">
+            <strong>[4]</strong> Mirjalili, S., Mirjalili, S. M., & Lewis, A. (2014). Grey wolf optimizer. 
+            <em>Advances in Engineering Software</em>, 69, 46-61.
+        </div>
+        
+        <p style="margin-top: 40px; text-align: center; color: #999; font-size: 0.9em;">
+            © 2026 - Escuela de Ingeniería Informática - Universidad de Valparaíso
+        </p>
+    </div>
+</body>
+</html>

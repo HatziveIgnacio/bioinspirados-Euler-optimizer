@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Euler Optimizer - Animación Interactiva</title>
+    <title>Chinese Pangolin Optimizer - Animación Interactiva</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -31,7 +31,7 @@
         }
         
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
             color: white;
             padding: 25px;
             text-align: center;
@@ -60,7 +60,7 @@
         }
         
         canvas {
-            border: 2px solid #667eea;
+            border: 2px solid #8B4513;
             border-radius: 8px;
             background: white;
             display: block;
@@ -112,7 +112,7 @@
             background: #f9f9f9;
             padding: 20px;
             border-radius: 8px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #8B4513;
         }
         
         .info-item {
@@ -129,7 +129,7 @@
         
         .label {
             font-weight: bold;
-            color: #667eea;
+            color: #8B4513;
             font-size: 0.9em;
             text-transform: uppercase;
             margin-bottom: 5px;
@@ -152,7 +152,7 @@
         
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            background: linear-gradient(90deg, #8B4513, #D2691E);
             width: 0%;
             transition: width 0.3s;
             display: flex;
@@ -187,7 +187,7 @@
         }
         
         .dot-particle {
-            background: #667eea;
+            background: #8B4513;
         }
         
         .dot-best {
@@ -225,44 +225,44 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Euler Optimizer - Animación</h1>
-            <p>Visualización dinámica del algoritmo de optimización global</p>
+            <h1>🦁 Chinese Pangolin Optimizer - Animación</h1>
+            <p>Simulación interactiva del rastreo olfativo y estrategia de caza del pangolín chino</p>
         </div>
         
         <div class="content">
             <div class="canvas-section">
-                <h2 style="font-size: 1.2em; color: #333;">Espacio de Búsqueda</h2>
+                <h2 style="font-size: 1.2em; color: #333;">🌿 Territorio de Caza</h2>
                 <canvas id="canvas"></canvas>
                 <div class="controls">
-                    <button class="btn-play" id="playBtn">▶️ Iniciar</button>
+                    <button class="btn-play" id="playBtn">🦁 Iniciar Caza</button>
                     <button class="btn-reset" id="resetBtn">🔄 Reiniciar</button>
                 </div>
                 
-                <div style="margin-top: 15px; padding: 15px; background: #e8f5e9; border-radius: 6px; border-left: 3px solid #4caf50;">
-                    <label style="display: block; font-weight: bold; color: #2e7d32; margin-bottom: 12px;">
-                        ⚙️ Parámetros del Algoritmo
+                <div style="margin-top: 15px; padding: 15px; background: #ffe0cc; border-radius: 6px; border-left: 3px solid #8B4513;">
+                    <label style="display: block; font-weight: bold; color: #5c2e0f; margin-bottom: 12px;">
+                        🦁 Parámetros de Caza del Pangolín
                     </label>
                     
                     <div style="margin-bottom: 12px;">
                         <div style="display: flex; justify-content: space-between; font-size: 0.9em; margin-bottom: 5px;">
-                            <span style="color: #333; font-weight: Bold;">Número de Partículas</span>
-                            <span style="color: #2e7d32; font-weight: bold;" id="particlesValue">20</span>
+                            <span style="color: #333; font-weight: Bold;">Número de Pangolines</span>
+                            <span style="color: #5c2e0f; font-weight: bold;" id="particlesValue">20</span>
                         </div>
                         <input type="range" id="particlesSlider" min="5" max="100" value="20" step="5" style="width: 100%; cursor: pointer;" disabled>
                     </div>
                     
                     <div style="margin-bottom: 12px;">
                         <div style="display: flex; justify-content: space-between; font-size: 0.9em; margin-bottom: 5px;">
-                            <span style="color: #333; font-weight: bold;">Máximo de Iteraciones</span>
-                            <span style="color: #2e7d32; font-weight: bold;" id="iterationsValue">200</span>
+                            <span style="color: #333; font-weight: bold;">Ciclos de Rastreo</span>
+                            <span style="color: #5c2e0f; font-weight: bold;" id="iterationsValue">200</span>
                         </div>
                         <input type="range" id="maxIterationsSlider" min="50" max="500" value="200" step="50" style="width: 100%; cursor: pointer;" disabled>
                     </div>
                     
                     <div style="margin-bottom: 12px;">
                         <div style="display: flex; justify-content: space-between; font-size: 0.9em; margin-bottom: 5px;">
-                            <span style="color: #333; font-weight: bold;">Δt Inicial</span>
-                            <span style="color: #2e7d32; font-weight: bold;" id="deltaTValue">0.15</span>
+                            <span style="color: #333; font-weight: bold;">Factor de Olor (Δt)</span>
+                            <span style="color: #5c2e0f; font-weight: bold;" id="deltaTValue">0.15</span>
                         </div>
                         <input type="range" id="deltaTSlider" min="0.05" max="0.5" value="0.15" step="0.05" style="width: 100%; cursor: pointer;" disabled>
                     </div>
@@ -270,7 +270,7 @@
                 
                 <div style="margin-top: 15px; padding: 15px; background: #fff3e0; border-radius: 6px;">
                     <label for="speedSlider" style="display: block; font-weight: bold; color: #ff9800; margin-bottom: 10px;">
-                        ⚡ Velocidad de Animación
+                        ⚡ Velocidad de Rastreo
                     </label>
                     <input type="range" id="speedSlider" min="50" max="2000" value="500" step="50" style="width: 100%; cursor: pointer;">
                     <div style="display: flex; justify-content: space-between; font-size: 0.85em; color: #999; margin-top: 5px;">
@@ -282,24 +282,24 @@
                 <div class="legend">
                     <div class="legend-item">
                         <div class="legend-dot dot-particle"></div>
-                        <span>Partículas</span>
+                        <span>🦁 Pangolines</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-dot dot-best"></div>
-                        <span>Mejor actual</span>
+                        <span>Mejor Presa</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-dot dot-optimum"></div>
-                        <span>Óptimo real</span>
+                        <span>Presa Óptima</span>
                     </div>
                 </div>
             </div>
             
             <div class="info-section">
-                <h2 style="font-size: 1.2em; color: #333; margin-bottom: 20px;">📊 Información</h2>
+                <h2 style="font-size: 1.2em; color: #333; margin-bottom: 20px;">🦁 Información de Caza</h2>
                 
                 <div class="info-item">
-                    <div class="label">Iteración</div>
+                    <div class="label">Ciclo de Rastreo</div>
                     <div class="value" id="iteration">0 / 50</div>
                     <div class="progress-bar">
                         <div class="progress-fill" id="progressFill" style="width: 0%;">0%</div>
@@ -307,35 +307,35 @@
                 </div>
                 
                 <div class="info-item">
-                    <div class="label">Mejor Valor (f_best)</div>
+                    <div class="label">Intensidad de Olor (f_best)</div>
                     <div class="value" id="fBest">∞</div>
                 </div>
                 
                 <div class="info-item">
-                    <div class="label">Tamaño de Paso (Δt)</div>
+                    <div class="label">Factor de Instinto (Δt)</div>
                     <div class="value" id="deltaT">0.5000</div>
-                    <p class="title-small">Δt = Δt₀ × (1 - t/N_iter)</p>
+                    <p class="title-small">Δt = Δt₀ × (1 - t/N_ciclos)</p>
                 </div>
                 
                 <div class="info-item">
-                    <div class="label">Número de Partículas</div>
+                    <div class="label">Pangolines Activos</div>
                     <div class="value" id="numParticles">20</div>
                 </div>
                 
                 <div class="info-item">
-                    <div class="label">Distancia a Óptimo</div>
+                    <div class="label">Distancia a Presa</div>
                     <div class="value" id="distance">Calculando...</div>
                 </div>
                 
-                <div style="background: #f0f7ff; padding: 12px; border-radius: 6px; border-left: 3px solid #2196f3; margin: 15px 0;">
-                    <div class="label">Paso Actual</div>
+                <div style="background: #fff4e0; padding: 12px; border-radius: 6px; border-left: 3px solid #8B4513; margin: 15px 0;">
+                    <div class="label">🦁 Fase Actual</div>
                     <div style="font-size: 0.95em; color: #333; line-height: 1.6; margin-top: 8px;" id="step-description">
-                        Presiona "Iniciar" para comenzar...
+                        Presiona "Iniciar Caza" para comenzar...
                     </div>
                 </div>
                 
                 <div class="status" id="status">
-                    Estado: Presiona "Iniciar" para comenzar
+                    🦁 Estado: Presiona "Iniciar Caza" para comenzar
                 </div>
             </div>
         </div>
@@ -440,19 +440,19 @@
             
             // Actualizar cada partícula
             particles.forEach(particle => {
-                // Dirección hacia mejor solución
+                // Dirección hacia mejor solución (vector de instinto olfativo)
                 const dx = bestParticle.x - particle.x;
                 const dy = bestParticle.y - particle.y;
                 
-                // Ecuación de movimiento de Euler
+                // Ecuación de movimiento (rastreo olfativo del pangolín)
                 particle.x += deltaT * dx;
                 particle.y += deltaT * dy;
                 
-                // Aplicar restricciones
+                // Aplicar restricciones (límites del territorio)
                 particle.x = Math.max(PARAMS.bounds.min, Math.min(PARAMS.bounds.max, particle.x));
                 particle.y = Math.max(PARAMS.bounds.min, Math.min(PARAMS.bounds.max, particle.y));
                 
-                // Evaluar nueva posición
+                // Evaluar nueva posición (intensidad de olor)
                 particle.value = objectiveFunction(particle.x, particle.y);
                 
                 // Actualizar mejor solución si hay mejora
@@ -474,7 +474,7 @@
             let zoomLevel = 1;
             if (iteration > PARAMS.maxIterations * 0.7) {
                 // Zoom progresivo en las últimas iteraciones
-                zoomLevel = 1 + (iteration - PARAMS.maxIterations * 0.7) / (PARAMS.maxIterations * 0.3) * 2;
+                zoomLevel = 1 + (iteration - PARAMS.maxIterations * 0.7) / (PARAMS.maxIteraciones * 0.3) * 2;
             }
             
             const scaleX = (canvas.width / (PARAMS.bounds.max - PARAMS.bounds.min)) * zoomLevel;
@@ -489,30 +489,30 @@
                 return centered;
             }
             
-            // Dibujar óptimo (centro)
+            // Dibujar presa óptima (centro)
             const optX = screenX(50);
             const optY = screenY(50);
             
-            // Zona de atracción alrededor del óptimo
+            // Zona de atracción olfativa alrededor de la presa
             ctx.fillStyle = 'rgba(255, 152, 0, 0.15)';
             ctx.beginPath();
             ctx.arc(optX, optY, 80 * zoomLevel, 0, Math.PI * 2);
             ctx.fill();
             
-            // Círculo de destino
+            // Círculo de destino (presa)
             ctx.strokeStyle = 'rgba(255, 152, 0, 0.4)';
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.arc(optX, optY, 50 * zoomLevel, 0, Math.PI * 2);
             ctx.stroke();
             
-            // Punto óptimo
+            // Punto de presa óptima
             ctx.fillStyle = '#ff9800';
             ctx.beginPath();
             ctx.arc(optX, optY, 10, 0, Math.PI * 2);
             ctx.fill();
             
-            // Dibujar mejor solución actual (MÁS GRANDE Y VISIBLE)
+            // Dibujar mejor solución actual (PRESA MEJOR ENCONTRADA - MÁS GRANDE Y VISIBLE)
             const bestX = screenX(bestParticle.x);
             const bestY = screenY(bestParticle.y);
             
@@ -524,7 +524,7 @@
                 ctx.fill();
             }
             
-            // Punto verde del mejor (más grande)
+            // Punto verde de la mejor presa encontrada (más grande)
             ctx.fillStyle = '#4caf50';
             ctx.beginPath();
             ctx.arc(bestX, bestY, 16, 0, Math.PI * 2);
@@ -537,18 +537,18 @@
             ctx.arc(bestX, bestY, 24, 0, Math.PI * 2);
             ctx.stroke();
             
-            // Dibujar partículas (más pequeñas para que se distinga mejor)
+            // Dibujar pangolines (más pequeños para que se distinga mejor)
             particles.forEach(particle => {
                 const px = screenX(particle.x);
                 const py = screenY(particle.y);
                 
-                ctx.fillStyle = 'rgba(102, 126, 234, 0.7)';
+                ctx.fillStyle = 'rgba(139, 69, 19, 0.7)';
                 ctx.beginPath();
                 ctx.arc(px, py, 3, 0, Math.PI * 2);
                 ctx.fill();
                 
-                // Línea hacia mejor solución (muy tenue)
-                ctx.strokeStyle = 'rgba(102, 126, 234, 0.15)';
+                // Línea hacia mejor solución (muy tenue) - instinto olfativo
+                ctx.strokeStyle = 'rgba(139, 69, 19, 0.15)';
                 ctx.lineWidth = 0.5;
                 ctx.beginPath();
                 ctx.moveTo(px, py);
@@ -591,28 +591,28 @@
             document.getElementById('distance').textContent = distance.toFixed(4);
             document.getElementById('numParticles').textContent = PARAMS.numParticles;
             
-            // Descripción del paso actual
+            // Descripción del paso actual (narrativa del pangolín)
             let stepDesc = '';
             if (iteration === 0) {
-                stepDesc = 'Inicializando particulas aleatoriamente en el espacio...';
+                stepDesc = '🦁 Inicializando pangolines en territorio dispersado...';
             } else if (iteration === 1) {
-                stepDesc = 'Primeira iteración: Calculando dirección hacia la mejor solución global...';
+                stepDesc = '👃 Primer ciclo: Pangolines detectan intensidad de olor (presa identificada)...';
             } else if (iteration < PARAMS.maxIterations / 2) {
-                stepDesc = `Fase de exploración: Δt = ${deltaT.toFixed(4)} (ALTO - explorando amplia región)`;
+                stepDesc = `🌿 Fase de Rastreo Olfativo: Factor = ${deltaT.toFixed(4)} (INTENSO - explorando por olor)`;
             } else if (iteration < PARAMS.maxIterations - 5) {
-                stepDesc = `Fase de explotación: Δt = ${deltaT.toFixed(4)} (BAJO - refinando alrededor del óptimo)`;
+                stepDesc = `⚡ Fase de Depredación: Factor = ${deltaT.toFixed(4)} (PRECISO - cerrando distancia)`;
             } else {
-                stepDesc = `Etapa final: Convergencia en proceso, distancia al óptimo: ${distance.toFixed(2)} unidades`;
+                stepDesc = `🏹 Captura Final: Pangolines convergen, distancia a presa: ${distance.toFixed(2)} unidades`;
             }
             
             document.getElementById('step-description').textContent = stepDesc;
             
             if (isRunning) {
-                document.getElementById('status').textContent = '▶️ Estado: En ejecución...';
+                document.getElementById('status').textContent = '🦁 Estado: Caza en progreso...';
             } else if (iteration >= PARAMS.maxIterations) {
-                document.getElementById('status').textContent = '✅ Estado: ¡Convergencia alcanzada!';
+                document.getElementById('status').textContent = '✅ Estado: ¡Presa capturada! Caza completada.';
             } else {
-                document.getElementById('status').textContent = '⏸️ Estado: Pausado';
+                document.getElementById('status').textContent = '⏸️ Estado: Rastreo pausado';
             }
         }
         
@@ -637,7 +637,7 @@
                 animationId = requestAnimationFrame(animate);
             } else if (isRunning && iteration >= PARAMS.maxIterations) {
                 isRunning = false;
-                document.getElementById('playBtn').textContent = '▶️ Iniciar';
+                document.getElementById('playBtn').textContent = '🦁 Iniciar Caza';
                 lastUpdateTime = 0;
             }
         }
@@ -649,7 +649,7 @@
             }
             
             isRunning = !isRunning;
-            this.textContent = isRunning ? '⏸️ Pausar' : '▶️ Iniciar';
+            this.textContent = isRunning ? '⏸️ Pausar Caza' : '🦁 Iniciar Caza';
             lastUpdateTime = 0;
             updateControlsState();
             
@@ -660,7 +660,7 @@
         
         document.getElementById('resetBtn').addEventListener('click', function() {
             isRunning = false;
-            document.getElementById('playBtn').textContent = '▶️ Iniciar';
+            document.getElementById('playBtn').textContent = '🦁 Iniciar Caza';
             lastUpdateTime = 0;
             updateControlsState();
             if (animationId) {
