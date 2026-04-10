@@ -1,0 +1,96 @@
+================================================================================
+PSEUDOCÓDIGO: EULER OPTIMIZER (ELO)
+================================================================================
+
+ALGORITMO EulerOptimizer(f, bounds, N_particulas, N_iteraciones, Δt_inicial)
+    
+    ENTRADA:
+        f: Función objetivo a optimizar
+        bounds: Límites inferiores y superiores para variables de decisión
+        N_particulas: Número de partículas (soluciones candidatas)
+        N_iteraciones: Número máximo de iteraciones
+        Δt_inicial: Tamaño de paso inicial (discretización del tiempo)
+    
+    SALIDA:
+        x_best: Mejor solución encontrada
+        f_best: Valor de función objetivo de la mejor solución
+    
+    ─────────────────────────────────────────────────────────────────────────
+    FASE 1: INICIALIZACIÓN
+    ─────────────────────────────────────────────────────────────────────────
+    
+    PARA i = 1 HASTA N_particulas HACER
+        x[i] ← GenerarAleatorio(bounds)            // Inicializar posición
+        f_evaluada[i] ← Evaluar(f, x[i])           // Evaluar función
+    FIN PARA
+    
+    x_best ← x[argmin(f_evaluada)]                 // Mejor solución inicial
+    f_best ← min(f_evaluada)                       // Mejor valor de función
+    
+    ─────────────────────────────────────────────────────────────────────────
+    FASE 2: LOOP ITERATIVO PRINCIPAL
+    ─────────────────────────────────────────────────────────────────────────
+    
+    PARA t = 1 HASTA N_iteraciones HACER
+        
+        // Actualizar parámetro de discretización del tiempo (adaptativo)
+        Δt ← Δt_inicial × (1 - t / N_iteraciones)  // Decremento lineal
+        
+        // Actualizar posición de cada partícula
+        PARA i = 1 HASTA N_particulas HACER
+            
+            // Calcular dirección/pendiente hacia la mejor solución
+            gradiente[i] ← (x_best - x[i]) / (||x_best - x[i]|| + ε)
+            
+            // Aplicar ecuación de movimiento de Euler
+            x[i] ← x[i] + Δt × gradiente[i]
+            
+            // Aplicar restricciones (límites de búsqueda)
+            x[i] ← Clip(x[i], bounds)
+            
+            // Evaluar nueva posición
+            f_nueva[i] ← Evaluar(f, x[i])
+            
+            // Actualizar mejor solución global si se encontró mejora
+            SI f_nueva[i] < f_best ENTONCES
+                x_best ← x[i]
+                f_best ← f_nueva[i]
+            FIN SI
+            
+        FIN PARA
+        
+        // (Opcional) Criterio de parada temprana
+        SI f_best < umbral_tolerancia ENTONCES
+            ROMPER
+        FIN SI
+        
+    FIN PARA
+    
+    ─────────────────────────────────────────────────────────────────────────
+    RETORNAR (x_best, f_best)
+    
+================================================================================
+
+COMPONENTES CLAVE DEL PSEUDOCÓDIGO:
+================================================================================
+
+1. x[i]: Vector de variables de decisión de la partícula i
+   
+2. f_evaluada[i]: Valor de la función objetivo para la solución i
+   
+3. Ecuación de movimiento:
+   x[i] ← x[i] + Δt × (x_best - x[i])
+   
+   Donde:
+   - Δt: Tamaño de paso (controla velocidad de convergencia)
+   - (x_best - x[i]): Vector dirección hacia mejor solución
+   - Decremento de Δt: Favorece explotación en iteraciones finales
+   
+4. Adaptabilidad:
+   - El parámetro Δt disminuye progresivamente (exploración → explotación)
+   - Todas las partículas son atraídas hacia la mejor solución global
+   
+5. Convergencia:
+   - El algoritmo converge cuando Δt → 0 o se alcanza N_iteraciones
+
+================================================================================

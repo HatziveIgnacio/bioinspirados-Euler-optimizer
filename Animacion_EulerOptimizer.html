@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Euler Optimizer - Animación Interactiva</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            max-width: 1000px;
+            width: 100%;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .canvas-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        canvas {
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            background: white;
+            display: block;
+            width: 100%;
+            height: 400px;
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        button {
+            padding: 12px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .btn-play {
+            background: #4caf50;
+            color: white;
+            grid-column: 1;
+        }
+        
+        .btn-play:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+        
+        .btn-reset {
+            background: #ff9800;
+            color: white;
+            grid-column: 2;
+        }
+        
+        .btn-reset:hover {
+            background: #e68900;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.4);
+        }
+        
+        .info-section {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .info-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .info-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .label {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        
+        .value {
+            font-size: 1.3em;
+            color: #333;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .legend {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
+        .dot-particle {
+            background: #667eea;
+        }
+        
+        .dot-best {
+            background: #4caf50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.8);
+        }
+        
+        .dot-optimum {
+            background: #ff9800;
+        }
+        
+        .status {
+            text-align: center;
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 6px;
+            margin-top: 15px;
+            color: #1565c0;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 900px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .title-small {
+            font-size: 0.9em;
+            color: #999;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Euler Optimizer - Animación</h1>
+            <p>Visualización dinámica del algoritmo de optimización global</p>
+        </div>
+        
+        <div class="content">
+            <div class="canvas-section">
+                <h2 style="font-size: 1.2em; color: #333;">Espacio de Búsqueda</h2>
+                <canvas id="canvas"></canvas>
+                <div class="controls">
+                    <button class="btn-play" id="playBtn">▶️ Iniciar</button>
+                    <button class="btn-reset" id="resetBtn">🔄 Reiniciar</button>
+                </div>
+                
+                <div style="margin-top: 15px; padding: 15px; background: #e8f5e9; border-radius: 6px; border-left: 3px solid #4caf50;">
+                    <label style="display: block; font-weight: bold; color: #2e7d32; margin-bottom: 12px;">
+                        ⚙️ Parámetros del Algoritmo
+                    </label>
+                    
+                    <div style="margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.9em; margin-bottom: 5px;">
+                            <span style="color: #333; font-weight: Bold;">Número de Partículas</span>
+                            <span style="color: #2e7d32; font-weight: bold;" id="particlesValue">20</span>
+                        </div>
+                        <input type="range" id="particlesSlider" min="5" max="100" value="20" step="5" style="width: 100%; cursor: pointer;" disabled>
+                    </div>
+                    
+                    <div style="margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.9em; margin-bottom: 5px;">
+                            <span style="color: #333; font-weight: bold;">Máximo de Iteraciones</span>
+                            <span style="color: #2e7d32; font-weight: bold;" id="iterationsValue">200</span>
+                        </div>
+                        <input type="range" id="maxIterationsSlider" min="50" max="500" value="200" step="50" style="width: 100%; cursor: pointer;" disabled>
+                    </div>
+                    
+                    <div style="margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.9em; margin-bottom: 5px;">
+                            <span style="color: #333; font-weight: bold;">Δt Inicial</span>
+                            <span style="color: #2e7d32; font-weight: bold;" id="deltaTValue">0.15</span>
+                        </div>
+                        <input type="range" id="deltaTSlider" min="0.05" max="0.5" value="0.15" step="0.05" style="width: 100%; cursor: pointer;" disabled>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 15px; padding: 15px; background: #fff3e0; border-radius: 6px;">
+                    <label for="speedSlider" style="display: block; font-weight: bold; color: #ff9800; margin-bottom: 10px;">
+                        ⚡ Velocidad de Animación
+                    </label>
+                    <input type="range" id="speedSlider" min="50" max="2000" value="500" step="50" style="width: 100%; cursor: pointer;">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85em; color: #999; margin-top: 5px;">
+                        <span>Rápido</span>
+                        <span id="speedValue">500ms</span>
+                        <span>Lento</span>
+                    </div>
+                </div>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-dot dot-particle"></div>
+                        <span>Partículas</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot dot-best"></div>
+                        <span>Mejor actual</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot dot-optimum"></div>
+                        <span>Óptimo real</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <h2 style="font-size: 1.2em; color: #333; margin-bottom: 20px;">📊 Información</h2>
+                
+                <div class="info-item">
+                    <div class="label">Iteración</div>
+                    <div class="value" id="iteration">0 / 50</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%;">0%</div>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="label">Mejor Valor (f_best)</div>
+                    <div class="value" id="fBest">∞</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="label">Tamaño de Paso (Δt)</div>
+                    <div class="value" id="deltaT">0.5000</div>
+                    <p class="title-small">Δt = Δt₀ × (1 - t/N_iter)</p>
+                </div>
+                
+                <div class="info-item">
+                    <div class="label">Número de Partículas</div>
+                    <div class="value" id="numParticles">20</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="label">Distancia a Óptimo</div>
+                    <div class="value" id="distance">Calculando...</div>
+                </div>
+                
+                <div style="background: #f0f7ff; padding: 12px; border-radius: 6px; border-left: 3px solid #2196f3; margin: 15px 0;">
+                    <div class="label">Paso Actual</div>
+                    <div style="font-size: 0.95em; color: #333; line-height: 1.6; margin-top: 8px;" id="step-description">
+                        Presiona "Iniciar" para comenzar...
+                    </div>
+                </div>
+                
+                <div class="status" id="status">
+                    Estado: Presiona "Iniciar" para comenzar
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Canvas setup
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Redimensionar canvas
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        // Parámetros del algoritmo (variables para permitir cambios dinámicos)
+        let PARAMS = {
+            numParticles: 20,
+            maxIterations: 200,
+            deltaT0: 0.15,
+            bounds: { min: 0, max: 100 }
+        };
+        
+        let particles = [];
+        let bestParticle = null;
+        let iteration = 0;
+        let isRunning = false;
+        let animationId = null;
+        let animationSpeed = 500; // milisegundos entre frames
+        let lastUpdateTime = 0;
+        
+        // Función objetivo de prueba (esfera con óptimo en el centro)
+        function objectiveFunction(x, y) {
+            const cx = 50, cy = 50;
+            const dist = Math.sqrt((x - cx) ** 2 + (y - cy) ** 2);
+            return dist;
+        }
+        
+        // Inicializar partículas (principalmente en los bordes, lejos del óptimo)
+        function initializeParticles() {
+            particles = [];
+            const centerX = 50, centerY = 50;
+            const minDistanceFromOptimum = 30; // Distancia mínima del óptimo (en radio)
+            
+            for (let i = 0; i < PARAMS.numParticles; i++) {
+                let x, y, distance;
+                
+                // Generar partículas que estén lejos del óptimo
+                do {
+                    // 70% de probabilidad: usar esquinas/bordes
+                    if (Math.random() < 0.7) {
+                        // Distribuir en los bordes (esquinas)
+                        const region = Math.floor(Math.random() * 4);
+                        if (region === 0) { // Esquina arriba-izquierda
+                            x = Math.random() * 35;
+                            y = Math.random() * 35;
+                        } else if (region === 1) { // Esquina arriba-derecha
+                            x = 65 + Math.random() * 35;
+                            y = Math.random() * 35;
+                        } else if (region === 2) { // Esquina abajo-izquierda
+                            x = Math.random() * 35;
+                            y = 65 + Math.random() * 35;
+                        } else { // Esquina abajo-derecha
+                            x = 65 + Math.random() * 35;
+                            y = 65 + Math.random() * 35;
+                        }
+                    } else {
+                        // 30% de probabilidad: distribuir en todo el espacio
+                        x = Math.random() * (PARAMS.bounds.max - PARAMS.bounds.min) + PARAMS.bounds.min;
+                        y = Math.random() * (PARAMS.bounds.max - PARAMS.bounds.min) + PARAMS.bounds.min;
+                    }
+                    
+                    // Calcular distancia al óptimo
+                    distance = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+                } while (distance < minDistanceFromOptimum); // Repetir si está muy cerca
+                
+                const value = objectiveFunction(x, y);
+                
+                particles.push({
+                    x: x,
+                    y: y,
+                    value: value,
+                    vx: 0,
+                    vy: 0
+                });
+            }
+            
+            // Encontrar mejor solución inicial
+            bestParticle = particles.reduce((best, p) => 
+                p.value < best.value ? p : best
+            );
+            
+            iteration = 0;
+        }
+        
+        // Actualizar iteración
+        function updateIteration() {
+            const deltaT = PARAMS.deltaT0 * (1 - iteration / PARAMS.maxIterations);
+            
+            // Actualizar cada partícula
+            particles.forEach(particle => {
+                // Dirección hacia mejor solución
+                const dx = bestParticle.x - particle.x;
+                const dy = bestParticle.y - particle.y;
+                
+                // Ecuación de movimiento de Euler
+                particle.x += deltaT * dx;
+                particle.y += deltaT * dy;
+                
+                // Aplicar restricciones
+                particle.x = Math.max(PARAMS.bounds.min, Math.min(PARAMS.bounds.max, particle.x));
+                particle.y = Math.max(PARAMS.bounds.min, Math.min(PARAMS.bounds.max, particle.y));
+                
+                // Evaluar nueva posición
+                particle.value = objectiveFunction(particle.x, particle.y);
+                
+                // Actualizar mejor solución si hay mejora
+                if (particle.value < bestParticle.value) {
+                    bestParticle = Object.assign({}, particle);
+                }
+            });
+            
+            iteration++;
+        }
+        
+        // Dibujar
+        function draw() {
+            // Limpiar canvas
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Escala de coordenadas (con zoom dinámico en fase final)
+            let zoomLevel = 1;
+            if (iteration > PARAMS.maxIterations * 0.7) {
+                // Zoom progresivo en las últimas iteraciones
+                zoomLevel = 1 + (iteration - PARAMS.maxIterations * 0.7) / (PARAMS.maxIterations * 0.3) * 2;
+            }
+            
+            const scaleX = (canvas.width / (PARAMS.bounds.max - PARAMS.bounds.min)) * zoomLevel;
+            const scaleY = (canvas.height / (PARAMS.bounds.max - PARAMS.bounds.min)) * zoomLevel;
+            
+            function screenX(x) {
+                const centered = (x - 50) * scaleX + canvas.width / 2;
+                return centered;
+            }
+            function screenY(y) {
+                const centered = (y - 50) * scaleY + canvas.height / 2;
+                return centered;
+            }
+            
+            // Dibujar óptimo (centro)
+            const optX = screenX(50);
+            const optY = screenY(50);
+            
+            // Zona de atracción alrededor del óptimo
+            ctx.fillStyle = 'rgba(255, 152, 0, 0.15)';
+            ctx.beginPath();
+            ctx.arc(optX, optY, 80 * zoomLevel, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Círculo de destino
+            ctx.strokeStyle = 'rgba(255, 152, 0, 0.4)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(optX, optY, 50 * zoomLevel, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            // Punto óptimo
+            ctx.fillStyle = '#ff9800';
+            ctx.beginPath();
+            ctx.arc(optX, optY, 10, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Dibujar mejor solución actual (MÁS GRANDE Y VISIBLE)
+            const bestX = screenX(bestParticle.x);
+            const bestY = screenY(bestParticle.y);
+            
+            // Halos de brillo alrededor del mejor punto
+            for (let i = 3; i > 0; i--) {
+                ctx.fillStyle = `rgba(76, 175, 80, ${0.15 / i})`;
+                ctx.beginPath();
+                ctx.arc(bestX, bestY, 35 * i, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Punto verde del mejor (más grande)
+            ctx.fillStyle = '#4caf50';
+            ctx.beginPath();
+            ctx.arc(bestX, bestY, 16, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Anillo externo brillante
+            ctx.strokeStyle = '#4caf50';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(bestX, bestY, 24, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            // Dibujar partículas (más pequeñas para que se distinga mejor)
+            particles.forEach(particle => {
+                const px = screenX(particle.x);
+                const py = screenY(particle.y);
+                
+                ctx.fillStyle = 'rgba(102, 126, 234, 0.7)';
+                ctx.beginPath();
+                ctx.arc(px, py, 3, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Línea hacia mejor solución (muy tenue)
+                ctx.strokeStyle = 'rgba(102, 126, 234, 0.15)';
+                ctx.lineWidth = 0.5;
+                ctx.beginPath();
+                ctx.moveTo(px, py);
+                ctx.lineTo(bestX, bestY);
+                ctx.stroke();
+            });
+            
+            // Ejes
+            ctx.strokeStyle = '#ddd';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height / 2);
+            ctx.lineTo(canvas.width, canvas.height / 2);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(canvas.width / 2, 0);
+            ctx.lineTo(canvas.width / 2, canvas.height);
+            ctx.stroke();
+            
+            // Mostrar nivel de zoom en la esquina
+            if (zoomLevel > 1.1) {
+                ctx.fillStyle = '#666';
+                ctx.font = 'bold 12px Arial';
+                ctx.fillText(`ZOOM: ${zoomLevel.toFixed(1)}x`, 10, 20);
+            }
+        }
+        
+        // Actualizar información
+        function updateInfo() {
+            const deltaT = PARAMS.deltaT0 * (1 - iteration / PARAMS.maxIterations);
+            const progress = (iteration / PARAMS.maxIterations) * 100;
+            const distance = Math.sqrt((bestParticle.x - 50) ** 2 + (bestParticle.y - 50) ** 2);
+            
+            document.getElementById('iteration').textContent = `${iteration} / ${PARAMS.maxIterations}`;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+            document.getElementById('progressFill').textContent = `${Math.round(progress)}%`;
+            document.getElementById('fBest').textContent = bestParticle.value.toFixed(4);
+            document.getElementById('deltaT').textContent = deltaT.toFixed(4);
+            document.getElementById('distance').textContent = distance.toFixed(4);
+            document.getElementById('numParticles').textContent = PARAMS.numParticles;
+            
+            // Descripción del paso actual
+            let stepDesc = '';
+            if (iteration === 0) {
+                stepDesc = 'Inicializando particulas aleatoriamente en el espacio...';
+            } else if (iteration === 1) {
+                stepDesc = 'Primeira iteración: Calculando dirección hacia la mejor solución global...';
+            } else if (iteration < PARAMS.maxIterations / 2) {
+                stepDesc = `Fase de exploración: Δt = ${deltaT.toFixed(4)} (ALTO - explorando amplia región)`;
+            } else if (iteration < PARAMS.maxIterations - 5) {
+                stepDesc = `Fase de explotación: Δt = ${deltaT.toFixed(4)} (BAJO - refinando alrededor del óptimo)`;
+            } else {
+                stepDesc = `Etapa final: Convergencia en proceso, distancia al óptimo: ${distance.toFixed(2)} unidades`;
+            }
+            
+            document.getElementById('step-description').textContent = stepDesc;
+            
+            if (isRunning) {
+                document.getElementById('status').textContent = '▶️ Estado: En ejecución...';
+            } else if (iteration >= PARAMS.maxIterations) {
+                document.getElementById('status').textContent = '✅ Estado: ¡Convergencia alcanzada!';
+            } else {
+                document.getElementById('status').textContent = '⏸️ Estado: Pausado';
+            }
+        }
+        
+        // Loop de animación (con velocidad controlable)
+        function animate(currentTime) {
+            if (!lastUpdateTime) lastUpdateTime = currentTime;
+            
+            const deltaTime = currentTime - lastUpdateTime;
+            
+            // Solo actualizar si ha pasado suficiente tiempo
+            if (isRunning && deltaTime >= animationSpeed) {
+                if (iteration < PARAMS.maxIterations) {
+                    updateIteration();
+                    lastUpdateTime = currentTime;
+                }
+            }
+            
+            draw();
+            updateInfo();
+            
+            if (isRunning && iteration < PARAMS.maxIterations) {
+                animationId = requestAnimationFrame(animate);
+            } else if (isRunning && iteration >= PARAMS.maxIterations) {
+                isRunning = false;
+                document.getElementById('playBtn').textContent = '▶️ Iniciar';
+                lastUpdateTime = 0;
+            }
+        }
+        
+        // Event listeners
+        document.getElementById('playBtn').addEventListener('click', function() {
+            if (iteration === 0) {
+                initializeParticles();
+            }
+            
+            isRunning = !isRunning;
+            this.textContent = isRunning ? '⏸️ Pausar' : '▶️ Iniciar';
+            lastUpdateTime = 0;
+            updateControlsState();
+            
+            if (isRunning && iteration < PARAMS.maxIterations) {
+                animate(performance.now());
+            }
+        });
+        
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            isRunning = false;
+            document.getElementById('playBtn').textContent = '▶️ Iniciar';
+            lastUpdateTime = 0;
+            updateControlsState();
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+            initializeParticles();
+            draw();
+            updateInfo();
+        });
+        
+        // Control de velocidad
+        document.getElementById('speedSlider').addEventListener('input', function() {
+            animationSpeed = parseInt(this.value);
+            document.getElementById('speedValue').textContent = animationSpeed + 'ms';
+        });
+        
+        // Control de parámetros del algoritmo (solo cuando no está corriendo)
+        document.getElementById('particlesSlider').addEventListener('input', function() {
+            if (!isRunning) {
+                PARAMS.numParticles = parseInt(this.value);
+                document.getElementById('particlesValue').textContent = PARAMS.numParticles;
+            }
+        });
+        
+        document.getElementById('maxIterationsSlider').addEventListener('input', function() {
+            if (!isRunning) {
+                PARAMS.maxIterations = parseInt(this.value);
+                document.getElementById('iterationsValue').textContent = PARAMS.maxIterations;
+            }
+        });
+        
+        document.getElementById('deltaTSlider').addEventListener('input', function() {
+            if (!isRunning) {
+                PARAMS.deltaT0 = parseFloat(this.value);
+                document.getElementById('deltaTValue').textContent = PARAMS.deltaT0.toFixed(2);
+            }
+        });
+        
+        // Función para habilitar/deshabilitar controles
+        function updateControlsState() {
+            const canEdit = !isRunning && iteration === 0;
+            document.getElementById('particlesSlider').disabled = !canEdit;
+            document.getElementById('maxIterationsSlider').disabled = !canEdit;
+            document.getElementById('deltaTSlider').disabled = !canEdit;
+        }
+        
+        // Inicializar
+        initializeParticles();
+        draw();
+        updateInfo();
+        updateControlsState();
+    </script>
+</body>
+</html>
