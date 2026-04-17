@@ -316,9 +316,9 @@
                 </div>
                 
                 <div class="info-item">
-                    <div class="label">Factor de Instinto (Δt)</div>
-                    <div class="value" id="deltaT">0.5000</div>
-                    <p class="title-small">Δt = Δt₀ × (1 - t/N_ciclos)</p>
+                    <div class="label">Parámetros Dinámicos</div>
+                    <div class="value" id="deltaT">C_u: 0.000 | E: 2.000</div>
+                    <p class="title-small">C_u: Concentración de aroma | E: Energía (E₀ × e^(-t/T))</p>
                 </div>
                 
                 <div class="info-item">
@@ -368,11 +368,13 @@
         
         let particles = [];
         let bestParticle = null;
+        let secondBestParticle = null;
         let iteration = 0;
         let isRunning = false;
         let animationId = null;
         let animationSpeed = 500; // milisegundos entre frames
         let lastUpdateTime = 0;
+        let aromaConcentration = 0; // C_u - concentración de aroma
         
         // Función objetivo de prueba (esfera con óptimo en el centro)
         function objectiveFunction(x, y) {
@@ -438,25 +440,137 @@
             iteration = 0;
         }
         
-        // Actualizar iteración
-        function updateIteration() {
-            const deltaT = PARAMS.deltaT0 * (1 - iteration / PARAMS.maxIterations);
+        // Calcular concentración de aroma (métrica global)
+        function calculateAromaConcentration() {
+            if (particles.length === 0) return 0;
             
-            // Actualizar cada partícula
+            // Distancia promedio de todos los pangolines al mejor punto
+            let totalDistance = 0;
+            let maxPossible = Math.sqrt(50*50 + 50*50) * 2; // Máxima distancia posible
+            
+            particles.forEach(p => {
+                const dx = bestParticle.x - p.x;
+                const dy = bestParticle.y - p.y;
+                totalDistance += Math.sqrt(dx*dx + dy*dy);
+            });
+            
+            const avgDistance = totalDistance / particles.length;
+            
+            // C_u: entre 0 (disperso) y 1 (concentrado)
+            const C_u = Math.max(0, Math.min(1, 1 - (avgDistance / maxPossible)));
+            return C_u;
+        }
+        
+        // Vuelo de Lévy para búsqueda estocástica
+        function levyFlight() {
+            const u = (Math.random() + Math.random() + Math.random() - 1.5) * 0.5;
+            const v = Math.random();
+            const beta = 1.5;
+            const step = u / Math.pow(Math.abs(v), 1/beta);
+            return step * 0.1; // Escalar para no saltar demasiado
+        }
+        
+        // Actualizar iteración - implementación EXACTA del paper
+        function updateIteration() {
+            // ═══ PASO 1: CALCULAR PARÁMETROS GLOBALES ═══
+            
+            // Concentración de aroma (C_u) - determina comportamiento
+            aromaConcentration = calculateAromaConcentration();
+            
+            // Factor aleatorio de concentración
+            const C_1 = 2 * Math.random() - 1; // [-1, 1]
+            
+            // ═══ PASO 2: IDENTIFICAR SOLUCIONES ═══
+            
+            // Encontrar mejor y segunda mejor
+            let tempBest = particles[0];
+            let tempSecondBest = particles[1] || particles[0];
+            
+            for (let i = 0; i < particles.length; i++) {
+                if (particles[i].value < tempBest.value) {
+                    tempSecondBest = Object.assign({}, tempBest);
+                    tempBest = Object.assign({}, particles[i]);
+                } else if (particles[i].value < tempSecondBest.value && particles[i] !== tempBest) {
+                    tempSecondBest = Object.assign({}, particles[i]);
+                }
+            }
+            
+            bestParticle = tempBest;
+            secondBestParticle = tempSecondBest;
+            
+            // ═══ PASO 3: ACTUALIZAR CADA PANGOLÍN ═══
+            
             particles.forEach(particle => {
-                // Dirección hacia mejor solución (vector de instinto olfativo)
-                const dx = bestParticle.x - particle.x;
-                const dy = bestParticle.y - particle.y;
+                // Factores individuales
+                const A_1 = 2 * Math.random() - 1; // [-1, 1]
+                const E_0 = 2;
+                const E = E_0 * Math.exp(-iteration / PARAMS.maxIterations); // Energía decreciente
+                const r = Math.random(); // Para decisión probabilística
                 
-                // Ecuación de movimiento (rastreo olfativo del pangolín)
-                particle.x += deltaT * dx;
-                particle.y += deltaT * dy;
+                let dx = 0, dy = 0;
+                
+                // ──────────────────────────────────────────────
+                // LURING BEHAVIOR (Atracción directa)
+                // ──────────────────────────────────────────────
+                if (aromaConcentration >= 0.2 && r <= 0.5) {
+                    
+                    // ETAPA 1: Atracción y Captura
+                    const distX = bestParticle.x - particle.x;
+                    const distY = bestParticle.y - particle.y;
+                    const dist = Math.sqrt(distX*distX + distY*distY) + 1e-6;
+                    const normX = distX / dist;
+                    const normY = distY / dist;
+                    
+                    // Movimiento hacia mejor solución
+                    dx += A_1 * E * normX;
+                    dy += A_1 * E * normY;
+                    
+                    // ETAPA 2: Movimiento y Alimentación (con Lévy)
+                    dx += levyFlight() * (bestParticle.x - particle.x);
+                    dy += levyFlight() * (bestParticle.y - particle.y);
+                
+                }
+                // ──────────────────────────────────────────────
+                // PREDATION BEHAVIOR (Depredación con subcasos)
+                // ──────────────────────────────────────────────
+                else if (aromaConcentration <= 0.7 || r > 0.5) {
+                    
+                    // SUBCASO 2a: BÚSQUEDA Y LOCALIZACIÓN (C_u < 0.3)
+                    if (aromaConcentration >= 0 && aromaConcentration < 0.3) {
+                        // Exploración aleatoria sin dirección clara
+                        const L_random = levyFlight() * (2 * Math.random() - 1);
+                        dx = L_random * (secondBestParticle.x - particle.x);
+                        dy = L_random * (secondBestParticle.y - particle.y);
+                    }
+                    // SUBCASO 2b: APROXIMACIÓN RÁPIDA (0.3 <= C_u < 0.6)
+                    else if (aromaConcentration >= 0.3 && aromaConcentration < 0.6) {
+                        // Usando función seno para modulación suave
+                        const modulation = Math.sin(C_1);
+                        dx = modulation * E * (bestParticle.x - particle.x);
+                        dy = modulation * E * (bestParticle.y - particle.y);
+                    }
+                    // SUBCASO 2c: EXCAVACIÓN Y ALIMENTACIÓN (C_u >= 0.6)
+                    else if (aromaConcentration >= 0.6) {
+                        // Convergencia exponencial - rápida y precisa
+                        const distX = particle.x - bestParticle.x;
+                        const distY = particle.y - bestParticle.y;
+                        const distance = Math.sqrt(distX*distX + distY*distY);
+                        const exponentialDecay = Math.exp(-distance);
+                        
+                        dx = A_1 * exponentialDecay * levyFlight();
+                        dy = A_1 * exponentialDecay * levyFlight();
+                    }
+                }
+                
+                // Aplicar movimiento
+                particle.x += dx;
+                particle.y += dy;
                 
                 // Aplicar restricciones (límites del territorio)
                 particle.x = Math.max(PARAMS.bounds.min, Math.min(PARAMS.bounds.max, particle.x));
                 particle.y = Math.max(PARAMS.bounds.min, Math.min(PARAMS.bounds.max, particle.y));
                 
-                // Evaluar nueva posición (intensidad de olor)
+                // Evaluar nueva posición
                 particle.value = objectiveFunction(particle.x, particle.y);
                 
                 // Actualizar mejor solución si hay mejora
@@ -474,12 +588,8 @@
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // Escala de coordenadas (con zoom dinámico en fase final)
+            // Escala de coordenadas (sin zoom)
             let zoomLevel = 1;
-            if (iteration > PARAMS.maxIterations * 0.7) {
-                // Zoom progresivo en las últimas iteraciones
-                zoomLevel = 1 + (iteration - PARAMS.maxIterations * 0.7) / (PARAMS.maxIteraciones * 0.3) * 2;
-            }
             
             const scaleX = (canvas.width / (PARAMS.bounds.max - PARAMS.bounds.min)) * zoomLevel;
             const scaleY = (canvas.height / (PARAMS.bounds.max - PARAMS.bounds.min)) * zoomLevel;
@@ -572,18 +682,14 @@
             ctx.moveTo(canvas.width / 2, 0);
             ctx.lineTo(canvas.width / 2, canvas.height);
             ctx.stroke();
-            
-            // Mostrar nivel de zoom en la esquina
-            if (zoomLevel > 1.1) {
-                ctx.fillStyle = '#666';
-                ctx.font = 'bold 12px Arial';
-                ctx.fillText(`ZOOM: ${zoomLevel.toFixed(1)}x`, 10, 20);
-            }
         }
+        
+        // Variable para controlar cambios de fase
+        let lastPhaseChangeIteration = 0;
         
         // Actualizar información
         function updateInfo() {
-            const deltaT = PARAMS.deltaT0 * (1 - iteration / PARAMS.maxIterations);
+            const E = 2 * Math.exp(-iteration / PARAMS.maxIterations);
             const progress = (iteration / PARAMS.maxIterations) * 100;
             const distance = Math.sqrt((bestParticle.x - 50) ** 2 + (bestParticle.y - 50) ** 2);
             
@@ -591,28 +697,42 @@
             document.getElementById('progressFill').style.width = `${progress}%`;
             document.getElementById('progressFill').textContent = `${Math.round(progress)}%`;
             document.getElementById('fBest').textContent = bestParticle.value.toFixed(4);
-            document.getElementById('deltaT').textContent = deltaT.toFixed(4);
+            document.getElementById('deltaT').textContent = `C_u: ${aromaConcentration.toFixed(3)} | E: ${E.toFixed(3)}`;
             document.getElementById('distance').textContent = distance.toFixed(4);
             document.getElementById('numParticles').textContent = PARAMS.numParticles;
             
             // Descripción del paso actual (narrativa del pangolín)
             let stepDesc = '';
+            let fase = '';
+            
             if (iteration === 0) {
                 stepDesc = '🦁 Inicializando pangolines en territorio dispersado...';
-            } else if (iteration === 1) {
-                stepDesc = '👃 Primer ciclo: Pangolines detectan intensidad de olor (presa identificada)...';
-            } else if (iteration < PARAMS.maxIterations / 2) {
-                stepDesc = `🌿 Fase de Rastreo Olfativo: Factor = ${deltaT.toFixed(4)} (INTENSO - explorando por olor)`;
-            } else if (iteration < PARAMS.maxIterations - 5) {
-                stepDesc = `⚡ Fase de Depredación: Factor = ${deltaT.toFixed(4)} (PRECISO - cerrando distancia)`;
-            } else {
-                stepDesc = `🏹 Captura Final: Pangolines convergen, distancia a presa: ${distance.toFixed(2)} unidades`;
+                fase = 'INICIALIZACIÓN';
+                lastPhaseChangeIteration = iteration;
+            } else if (iteration - lastPhaseChangeIteration > 10) {  // Cambiar cada 10+ iteraciones
+                
+                // Determinar fase basada SOLO en C_u (no en random)
+                if (aromaConcentration >= 0.6) {
+                    stepDesc = `🏹 PREDATION - Excavación final (C_u=${aromaConcentration.toFixed(2)}), convergencia exponencial`;
+                    fase = 'EXCAVACIÓN';
+                } else if (aromaConcentration >= 0.3) {
+                    stepDesc = `⚡ PREDATION - Aproximación rápida (C_u=${aromaConcentration.toFixed(2)}), modulación seno`;
+                    fase = 'APROXIMACIÓN';
+                } else if (aromaConcentration >= 0.2) {
+                    stepDesc = `👃 LURING - Presa detectada (C_u=${aromaConcentration.toFixed(2)}), ataque directo`;
+                    fase = 'ATRACCIÓN';
+                } else {
+                    stepDesc = `🔍 PREDATION - Búsqueda sin dirección (C_u=${aromaConcentration.toFixed(2)})` ;
+                    fase = 'BÚSQUEDA';
+                }
+                
+                lastPhaseChangeIteration = iteration;
             }
             
             document.getElementById('step-description').textContent = stepDesc;
             
             if (isRunning) {
-                document.getElementById('status').textContent = '🦁 Estado: Caza en progreso...';
+                document.getElementById('status').textContent = `🦁 Estado: ${fase} | Caza en progreso...`;
             } else if (iteration >= PARAMS.maxIterations) {
                 document.getElementById('status').textContent = '✅ Estado: ¡Presa capturada! Caza completada.';
             } else {
@@ -713,6 +833,7 @@
         
         // Inicializar
         initializeParticles();
+        secondBestParticle = bestParticle;
         draw();
         updateInfo();
         updateControlsState();
